@@ -24,7 +24,7 @@ const Feed = () => {
   const [posts, setPosts] = useState([]);
 
   const handleSearchChange = (e) => {
-
+    clearTimeout(searchTimeout);
     setSearchText(e.target.value);
 
     setSearchTimeout(
@@ -33,8 +33,6 @@ const Feed = () => {
         setSearchedResult(searchResult);
       }, 500)
     );
-
-    clearTimeout(searchTimeout);
   };
 
   const handleTagClick = (tagName) => {
