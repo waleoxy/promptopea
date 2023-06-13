@@ -23,6 +23,27 @@ const Feed = () => {
   const [searchedResult, setSearchedResult] = useState("");
   const [posts, setPosts] = useState([]);
 
+  const fetchPost = async () => {
+    const response = await fetch("/api/prompt");
+    const data = await response.json();
+
+    setAllPosts(data);
+  };
+
+  useEffect(() => {
+    fetchPost();
+  }, []);
+
+  const filteredPrompts = (searchText) => {
+    const regex = new RegExp(searchText, "i");
+    return posts.filter(
+      (item) =>
+        regex.test(item.creator.username) ||
+        regex.test(item.tag) ||
+        regex.test(item.prompt) || regex.test(item.creator.email)
+    );
+  };
+
   const handleSearchChange = (e) => {
     clearTimeout(searchTimeout);
     setSearchText(e.target.value);
@@ -40,27 +61,6 @@ const Feed = () => {
 
     const searchResult = filteredPrompts(tagName);
     setSearchedResult(searchResult);
-  };
-
-  useEffect(() => {
-    const fetchPost = async () => {
-      const response = await fetch("/api/prompt");
-
-      const data = await response.json();
-      setPosts(data);
-    };
-
-    fetchPost();
-  }, []);
-
-  const filteredPrompts = (searchText) => {
-    const regex = new RegExp(searchText, "i");
-    return posts.filter(
-      (item) =>
-        regex.test(item.creator.username) ||
-        regex.test(item.tag) ||
-        regex.test(item.prompt) || regex.test(item.creator.email)
-    );
   };
 
   console.log(posts);
